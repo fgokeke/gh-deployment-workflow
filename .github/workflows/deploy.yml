@@ -1,0 +1,36 @@
+# Name of the workflow (visible in Github Actions tab)
+name: Deploy to Github Pages
+
+
+# Trigger: when this workflow should run
+on: 
+  push:                 # Run when someone pushes commits
+    branches:
+      - main            # Only run if the push is to the 'main' branch
+    paths:              # Only run if these files are changed
+      - index.html      # Here we only care about changes to index.html
+
+
+# Define the jobs for this workflow
+jobs:
+  build-and-deploy:     
+    runs-on: ubuntu-latest # The virtual machine the job will run on
+
+
+    steps:
+
+      # Step 1: check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+
+      # Step 2: Deploy to Github Pages
+      - name: Deploy to Github Pages
+        uses: peaceiris/actions-gh-pages@v6
+
+
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+
+          publish_dir: ./
