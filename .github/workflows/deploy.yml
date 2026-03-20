@@ -11,11 +11,13 @@ on:
       - index.html      # Here we only care about changes to index.html
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 # Define the jobs for this workflow
 jobs:
-  build-and-deploy:     
+  deploy:     
     runs-on: ubuntu-latest # The virtual machine the job will run on
 
 
@@ -25,14 +27,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Setup Github Pages
+      - name: Setup Github Pages
+        uses: actions/configure-pages@v5
 
-      # Step 2: Deploy to Github Pages
-      - name: Deploy to Github Pages
-        uses: peaceiris/actions-gh-pages@v3
-
-
+      # Step 3: Upload Github Pages artifact
+      - name: Upload Github Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-
-          publish_dir: ./
+          path: ./
+      
+      # Step 4: Deploy to Github Pages
+      - name: Deploy to Github Pages
+        uses: actions/deploy-pages@v4
